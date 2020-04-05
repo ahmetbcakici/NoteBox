@@ -44,6 +44,23 @@ app.get('/notekle', (req, res) => {
 
         doc.save();
     })
+    res.send();
+})
+
+app.get('/notsil', (req, res) => {
+    const userID = '5e88a31c15f9f74aa690106d'; // bugra kullanicisinin ID bilgisi
+    const noteIDtoDelete = '5e88b9e32f08f15e860028f1'; //bugra kullanicisinin silinecek note ID bilgisi
+    User.findById(userID).then(doc => {
+
+        doc.notes.map(note => {
+            if (note._id == noteIDtoDelete) {
+                console.log(note)
+                    //note.remove();
+            }
+        })
+
+        doc.save();
+    })
 })
 
 app.listen(PORT, (err) => {
