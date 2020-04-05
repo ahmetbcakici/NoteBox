@@ -6,35 +6,45 @@ import User from './models/User';
 
 const PORT = process.env.PORT || 5001;
 const app = express();
-require('dotenv').config()
+require('dotenv').config();
 
-mongoose.connect(
-    process.env.DB_URI, { useNewUrlParser: true },
-    (err) => {
-        if (err) throw err;
-        console.log('Mongoose connected');
-    }
-);
+mongoose.connect(process.env.DB_URI, { useNewUrlParser: true }, (err) => {
+    if (err) throw err;
+    console.log('Mongoose connected');
+});
 
 app.get('/', (req, res) => {
     res.send('server is running');
 });
 
-app.get('/kaydet', (req, res) => {
-    console.log('istek')
+app.get('/kullanicikaydet', (req, res) => {
+    const username = 'ahmet',
+        password = '123';
     const letData = new User({
-        username: 'bugra',
-        password: '333',
-        notes: { title: 'Matematik', body: '13 asal sayıdır.' }
-    })
-    letData.save(err => {
+        username,
+        password,
+        notes: { title: 'Sample', body: 'This note is a sample.' },
+    });
+    letData.save((err) => {
         if (err) throw err;
-        console.log("Saved successfully");
+        console.log('Saved successfully');
     });
     res.send('a');
 });
 
+app.get('/notekle', (req, res) => {
+    const userID = '5e88a31c15f9f74aa690106d';
+    const noteTitle = 'Türkçe',
+        noteBody = 'Şey ayrı yazılır.';
+    User.findById(userID).then(doc => {
+        doc.notes.push({
+            title: noteTitle,
+            body: noteBody
+        });
 
+        doc.save();
+    })
+})
 
 app.listen(PORT, (err) => {
     if (err) throw err;
@@ -44,11 +54,13 @@ app.listen(PORT, (err) => {
 /*
 
 
-{ "_id" : ObjectId("5e88a14e734b1b48cc556588"), "username" : "mehmet",
- "password" : "321",
-  "notes" : [
-       { "_id" : ObjectId("5e88a14e734b1b48cc556589"), "note" : "express js icerisinde mongoose kullanilir" },
-       { "_id" : ObjectId("5e813134b1b48cc556589"), "note" : "esdde kullanilir" } 
-    ]
+{ "_id" : ObjectId("5e88a31c15f9f74aa690106d"),
+ "username" : "bugra",
+  "password" : "333",
+   "notes" : [ 
+       { "_id" : ObjectId("5e88a31c15f9f74aa690106e"), "title" : "Matematik", "body" : "13 asal sayıdır." },
+        { "_id" : ObjectId("5e88b9e32f08f15e860028f1"), "title" : "Türkçe", "body" : "Şey ayrı yazılır." }
+   ]
+
 
 */
