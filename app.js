@@ -63,6 +63,21 @@ app.get('/notsil', (req, res) => {
     })
 })
 
+app.get('/notguncelle', (req, res) => {
+    const userID = '5e88a31c15f9f74aa690106d'; // bugra kullanicisinin ID bilgisi
+    const noteIDtoUpdate = '5e88a31c15f9f74aa690106e'; //bugra kullanicisinin guncellenecek note ID bilgisi
+    User.findById(userID).then(doc => {
+
+        doc.notes.map(note => {
+            if (note._id == noteIDtoUpdate) {
+                note.title = "Matematik + Geometri";
+            }
+        })
+
+        doc.save();
+    })
+})
+
 app.listen(PORT, (err) => {
     if (err) throw err;
     console.log(`Server is running on ${PORT} port`);
